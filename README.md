@@ -1,15 +1,25 @@
 
-# PROJECT_NAME
+# homebox
 
-*...*
+A personal inventory management system
+
+- [Homebox portal][10]
+- [Homebox demo][4]
+- [Github: i8degrees-dockerfiles/homebox.git][0]
+- [Github: Homebox][1]
+- [Docker Hub: Homebox][2]
 
 ## usage
 
-*...*
+```sh
+git clone https://github.com/i8degrees-dockerfiles/homebox.git homebox.git
+cd homebox.git
+```
 
 ### deps
 
-*...*
+- `docker`
+  * `docker-compose`
 
 ### docker setup
 
@@ -32,7 +42,7 @@ passwords are kept somewhere safe and accessible in the case that they may
 need to be revoked at some point in the future.
 
 ```sh
-PROJECT_SITE_URL=project.fs1.home
+HBOX_WEB_HOST=inventory.fs1.home
 ```
 
 As I already have a private DNS setup on my LAN, I simply
@@ -74,4 +84,9 @@ docker stop service-proxy # service name
 
 ## reference documents
 
-[0]: https://github.com/i8degrees-dockerfiles
+[0]: https://github.com/i8degrees-dockerfiles/homebox
+[1]: https://github.com/sysadminsmedia/homebox/
+[2]: https://hub.docker.com/r/sysadminsmedia/homebox/tags
+[3]: https://homebox.software/en/configure
+[4]: https://demo.homebox.software/
+[10]: https://inventory.fs1.home/
