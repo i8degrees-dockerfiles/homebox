@@ -9,20 +9,20 @@ networks:
     attachable: true
     driver: overlay
     external: true
-  service-db:
-  service-www:
+  homebox-db:
+  homebox-www:
 
 volumes:
   data:
 
 services:
 
-  service-db:
+  homebox-db:
     # IMPORTANT(JEFF): The version of postgres used may be specific to
     # the project you are setting up. Check with the documentation!
     # https://hub.docker.com/_/postgres
     image: postgres:15
-    container_name: service-db
+    container_name: homebox-db
     expose:
       - ${SERVICE_DB_PORT:-5432}/tcp
     environment:
@@ -35,27 +35,27 @@ services:
       - ${SERVICE_EXT_VOLUME:?You must specify the 'SERVICE_EXT_VOLUME' variable in the .env file!}:/var/lib/postgresql/data/:z
     restart: unless-stopped
     networks:
-      - service-db
+      - homebox-db
 
-  service-server:
+  homebox-server:
     env_file:
       - .env
     networks:
       - traefik-proxy
-      - service-db
+      - homebox-db
     expose:
       - 3000
     image: user/image:${SERVICE_TAG:-latest}
-    container_name: service-server
+    container_name: homebox-server
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /etc/ssl/certs:/etc/ssl/certs:ro
       - data:/data:rw
 
-  service-proxy:
+  homebox-proxy:
     depends_on:
-      - service-server
+      - homebox-server
     env_file:
       - .env
     networks:
@@ -64,7 +64,7 @@ services:
       - ${SERVICE_WEB_PORT:-3000}:80
     # https://hub.docker.com/_/nginx
     image: nginx:alpine
-    container_name: service-proxy
+    container_name: homebox-proxy
     restart: always
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -75,8 +75,8 @@ services:
       #- media:/var/www/html/media
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.service-fs1.rule=Host(`service.fs1.home`) && PathPrefix(`/`)"
-      - "traefik.http.routers.service-fs1.entrypoints=websecure"
-      - "traefik.http.services.service-fs1.loadbalancer.server.port=80"
-      - "traefik.http.routers.service-fs1.service=service-fs1"
-      - "traefik.http.routers.service-fs1.tls.certresolver=staging-web-acme"
+      - "traefik.http.routers.homebox-fs1.rule=Host(`inventory.fs1.home`) && PathPrefix(`/`)"
+      - "traefik.http.routers.homebox-fs1.entrypoints=websecure"
+      - "traefik.http.services.homebox-fs1.loadbalancer.server.port=80"
+      - "traefik.http.routers.homebox-fs1.service=homebox-fs1"
+      - "traefik.http.routers.homebox-fs1.tls.certresolver=staging-web-acme"
