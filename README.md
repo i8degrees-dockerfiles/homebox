@@ -8,6 +8,7 @@ A personal inventory management system
 - [Github: i8degrees-dockerfiles/homebox.git][0]
 - [Github: Homebox][1]
 - [Docker Hub: Homebox][2]
+- [Homebox: API docs][11]
 
 ## usage
 
@@ -90,3 +91,4 @@ docker stop service-proxy # service name
 [3]: https://homebox.software/en/configure
 [4]: https://demo.homebox.software/
 [10]: https://inventory.fs1.home/
+[11]: https://homebox.software/en/api/#/
