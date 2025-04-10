@@ -1,0 +1,4 @@
+[submodule "docs/homebox.git"]
+	path = docs/homebox.git
+	url = https://github.com/sysadminsmedia/homebox
+	branch = main
