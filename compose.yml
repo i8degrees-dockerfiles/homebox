@@ -9,49 +9,49 @@ networks:
     attachable: true
     driver: overlay
     external: true
-  homebox-db:
-  homebox-www:
+  # NOTE(JEFF): This network does not exist when we have opt-in to using
+  # SQLITE backend as we have!
+  #homebox-db:
 
-volumes:
-  data:
+#volumes:
+  # NOTE(JEFF): This volume should only be used when not using a bind mount
+  # as your method of separating user data from else.
+  #
+  # volumes:
+    #- homebox-data:${HBOX_STORAGE_DATA}:rw
+  #homebox-data:
+    #driver: local
+  # NOTE(JEFF): This network does not exist when we have opt-in to using
+  # SQLITE backend as we have!
+  #homebox-db:
+    #driver: local
 
 services:
 
-  homebox-db:
-    # IMPORTANT(JEFF): The version of postgres used may be specific to
-    # the project you are setting up. Check with the documentation!
-    # https://hub.docker.com/_/postgres
-    image: postgres:15
-    container_name: homebox-db
-    expose:
-      - ${SERVICE_DB_PORT:-5432}/tcp
-    environment:
-      - PGDATA=/var/lib/postgresql/data/pgdb
-      - POSTGRES_USER=${SERVICE_DB_USER:?You must provide the 'SERVICE_DB_USER' variable in the .env file}
-      - POSTGRES_PASSWORD=${SERVICE_DB_PASSWORD:?You must provide the 'SERVICE_DB_PASSWORD' variable in the .env file}
-      - POSTGRES_DB=${SERVICE_DB_NAME:?You must provide the 'SERVICE_DB_NAME' variable in the .env file}
-    volumes:
-      # Map 'data' volume such that postgres database is stored externally
-      - ${SERVICE_EXT_VOLUME:?You must specify the 'SERVICE_EXT_VOLUME' variable in the .env file!}:/var/lib/postgresql/data/:z
-    restart: unless-stopped
-    networks:
-      - homebox-db
+  # NOTE(JEFF): This service does not exist when we have opt-in to using
+  # SQLITE backend as we have!
+  #homebox-db:
+    #networks:
+      #- homebox-server
 
   homebox-server:
     env_file:
       - .env
     networks:
       - traefik-proxy
-      - homebox-db
-    expose:
-      - 3000
-    image: user/image:${SERVICE_TAG:-latest}
+    ports:
+      - 3100:${HBOX_WEB_PORT}
+    # https://hub.docker.com/r/sysadminsmedia/homebox/tags
+    # image: sysadminsmedia/homebox:${HBOX_TAG:-latest}
+    # https://ghcr.io/sysadminsmedia/homebox:latest
+    image: ghcr.io/sysadminsmedia/homebox:${HBOX_TAG:-latest}
     container_name: homebox-server
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /etc/ssl/certs:/etc/ssl/certs:ro
-      - data:/data:rw
+      # bind mount opt
+      - ./data:${HBOX_STORAGE_DATA}:rw
 
   homebox-proxy:
     depends_on:
@@ -61,7 +61,7 @@ services:
     networks:
       - traefik-proxy
     ports:
-      - ${SERVICE_WEB_PORT:-3000}:80
+      - ${NGINX_WEB_PORT:-80}:80
     # https://hub.docker.com/_/nginx
     image: nginx:alpine
     container_name: homebox-proxy
@@ -70,13 +70,14 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /etc/ssl/certs:/etc/ssl/certs:ro
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro,z
-      - ${SERVICE_EXT_VOLUME}:/var/www:z
-      #- static:/var/www/html/static
-      #- media:/var/www/html/media
     labels:
       - "traefik.enable=true"
+      # https://inventory.fs1.home
       - "traefik.http.routers.homebox-fs1.rule=Host(`inventory.fs1.home`) && PathPrefix(`/`)"
       - "traefik.http.routers.homebox-fs1.entrypoints=websecure"
       - "traefik.http.services.homebox-fs1.loadbalancer.server.port=80"
       - "traefik.http.routers.homebox-fs1.service=homebox-fs1"
       - "traefik.http.routers.homebox-fs1.tls.certresolver=staging-web-acme"
+      # NOTE(JEFF): This may not be a necessity as we are using nginx as the
+      # backend proxy here
+      - "traefik.http.routers.homebox-fs1.middlewares=wss@file"

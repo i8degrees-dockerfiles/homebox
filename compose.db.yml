@@ -1,0 +1,40 @@
+# compose.yml:jeff
+#
+# Docker compose template
+#
+---
+
+networks:
+  traefik-proxy:
+    attachable: true
+    driver: overlay
+    external: true
+  homebox-db:
+
+#volumes:
+  #homebox-db:
+    #driver: local
+
+services:
+
+  homebox-db:
+    # IMPORTANT(JEFF): The version of postgres used may be specific to
+    # the project you are setting up. Check with the documentation!
+    # https://hub.docker.com/_/postgres
+    image: postgres:15
+    container_name: homebox-db
+    expose:
+      - ${HBOX_DATABASE_PORT:-5432}/tcp
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdb
+      - POSTGRES_USER=${HBOX_DATABASE_USER:?You must provide the 'HBOX_DATABASE_USER' variable in the .env file}
+      - POSTGRES_PASSWORD=${HBOX_DATABASE_PASSWORD:?You must provide the 'HBOX_DATABASE_PASSWORD' variable in the .env file}
+      - POSTGRES_DB=${HBOX_DATABASE_DATABASE:?You must provide the 'HBOX_DATABASE_DATABASE' variable in the .env file}
+    volumes:
+      # Map 'data' volume such that postgres database is stored externally
+      #- ./data:${HBOX_STORAGE_DATA:?You must specify the 'HBOX_STORAGE_DATA' variable in the .env file!}:/var/lib/postgresql/data/:z
+      - ./data:/var/lib/postgresql/data/:z
+    restart: unless-stopped
+    networks:
+      - homebox-db
+      - traefik-proxy
