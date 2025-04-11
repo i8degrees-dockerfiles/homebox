@@ -37,7 +37,7 @@
 #### attachments
 
 - [ ] upload content by URL
-  * remote https URL
+  * remote www via `curl` or `wget` *worker*
   * `postgres://`
   * `file:///`
   * `smb:///`
