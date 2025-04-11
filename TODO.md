@@ -36,6 +36,11 @@
 
 #### attachments
 
+- [ ] upload content by URL
+  * remote https URL
+  * `postgres://`
+  * `file:///`
+  * `smb:///`
 - [ ] add new attachment types
   * markdown
   * schematics
