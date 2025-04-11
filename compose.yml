@@ -86,3 +86,10 @@ services:
       # NOTE(JEFF): This may not be a necessity as we are using nginx as the
       # backend proxy here
       #- "traefik.http.routers.homebox-fs1.middlewares=wss@file"
+      #
+      # https://homebox.home
+      - "traefik.http.routers.homebox-home.rule=Host(`homebox.home`) && PathPrefix(`/`)"
+      - "traefik.http.routers.homebox-home.entrypoints=websecure"
+      - "traefik.http.services.homebox-home.loadbalancer.server.port=80"
+      - "traefik.http.routers.homebox-home.service=homebox-home"
+      - "traefik.http.routers.homebox-home.tls.certresolver=staging-web-acme"
