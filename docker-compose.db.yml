@@ -10,7 +10,9 @@ networks:
     driver: overlay
     external: true
   homebox-db:
-
+    attachable: true
+    driver: overlay
+    external: true
 #volumes:
   #homebox-db:
     #driver: local
