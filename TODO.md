@@ -12,9 +12,6 @@
 - [ ] attempt to use the postgres backend once more
   * `compose.db.yml`
 
-- [ ] finish initial plumbing work to separate attachments storage
-from the API & server
-
 - [ ] experiment with importing CSV of Amazon order history
 - [ ] improve the date picker
 - [ ] user avatar photos
@@ -22,6 +19,32 @@ from the API & server
   * **CSS** injection
   * custom 404, ... pages
 - [ ] templating list of *custom fields* added at time of item creation
+
+#### markdown engine
+
+- [ ] add a Markdown rendering engine that can use...
+  * **GFM** -- GithubMarkdown
+  * Tables
+    - multiple table rendering formats
+    - research table export engines
+  * *...*
+  * *transcode* note files in real-time for hpyerlink 
+  injections / modifications
+    - CDN prefixing
+    - sanitize URLs
+    - *...*
+
+#### attachments
+
+- [ ] add new attachment types
+  * markdown
+  * schematics
+  * somehow integrate **custom fields** here?
+
+- [ ] frontend: finish initial plumbing work to separate attachments storage
+from the API & server
+  * `./mounts/nginx/nginx.conf`
+    * `./mounts/nginx/snippets/attachments.conf`
 
 #### /home
 
