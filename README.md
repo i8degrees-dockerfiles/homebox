@@ -9,6 +9,7 @@ A personal inventory management system
 - [Github: Homebox][1]
 - [Docker Hub: Homebox][2]
 - [Homebox: API docs][11]
+- [swagger-ui](https://github.com/swagger-api/swagger-ui.git)
 
 ## usage
 
