@@ -25,6 +25,8 @@ networks:
   # SQLITE backend as we have!
   #homebox-db:
     #driver: local
+  #homebox-attachments:
+    #driver: local
 
 services:
 
@@ -52,6 +54,7 @@ services:
       - /etc/ssl/certs:/etc/ssl/certs:ro
       # bind mount opt
       - ./data:${HBOX_STORAGE_DATA}:rw
+      #- ./data/attachments:${HBOX_STORAGE_DATA}:rw
 
   homebox-proxy:
     depends_on:
@@ -71,6 +74,7 @@ services:
       - /etc/ssl/certs:/etc/ssl/certs:ro
       - ./mounts/nginx/conf.d:/etc/nginx/conf.d:ro,z
       - ./mounts/nginx/snippets:/etc/nginx/snippets:ro,z
+      #- ./data/attachments:${HBOX_STORAGE_DATA}:rw
     labels:
       - "traefik.enable=true"
       # https://inventory.fs1.home
